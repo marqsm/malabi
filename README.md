@@ -6,7 +6,7 @@ Motivation was to try making similar tools as in underscore.js, lo-dash etc JS l
 
 **It is completely unoptimized and untested in any real environment, and absolutely nobody should currently use it in production.**
 
-What it is good for is understanding what functions like map, filter, reduce do (from underscore) and simple functional concepts like composing functions, creating partial functions and currying functions.
+What it is good for is understanding what functions like map, filter, reduce do (from underscore) and simple functional concepts like composing functions and creating partial functions. Currying functions is under construction.
 
 ### Installing
 1. Clone the repository

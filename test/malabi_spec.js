@@ -49,6 +49,28 @@ describe("Malabi-library", function() {
         });
     });
 
+    describe("curry", function() {
+        it("Curries with two parameters", function() {
+            var _sum = function(a, b) {
+                return a + b;
+            };
+            var sum = function() {
+                var args = Array.prototype.slice.call(arguments);
+                return malabi.reduce(args, _sum, []);
+            }
+            var sumc = malabi.curry(_sum, 4);
+            expect(sumc(3)).to.equal(7);
+        });
+
+        it("Curries with three parameters", function() {
+            var sum = function(a, b) {
+                return a + b;
+            }
+            var sumc = malabi.curry(sum, 4, 5)
+            expect(sumc(3)).to.equal(12);
+        });
+    });
+
 
     describe("map", function() {
         it("map([1, 2, 3], function(value, index) { return value * 3; }) should return [3, 6, 9]", function() {

@@ -23,9 +23,10 @@
     };
 
     var toArray = malabi.toArray = function() {
-        return Array.prototype.slice.call(arguments);
+        return __slice.call(arguments);
     };
 
+    // TODO: add support for variable number of parameters
     malabi.partialLeft = function(fn, larg) {
         return function() {
             var args = __slice.call(arguments, 0);
@@ -33,6 +34,7 @@
         };
     };
 
+    // TODO: add support for variable number of parameters
     malabi.partialRight = function(fn, rarg) {
         return function() {
             var args = __slice.call(arguments, 0);
@@ -40,10 +42,11 @@
         };
     };
 
-
-    malabi.curry = function(a, b) {
+    // TODO: add support for variable number of parameters
+    malabi.curry = function(fn, larg) {
         return function() {
-            return false;
+            var args = __slice.call(arguments, 0);
+            return null;
         };
     };
 
