@@ -24,5 +24,8 @@ Currently just the tests. Naming is in most parts same as in underscore, and the
 
 `PartialLeft` & `PartialRight` and a lot of ideas and inspiration from Reginald Braithwaites excellent eBook "[JavaScript Allongé]" - currently my favourite JavaScript-book.
 
+`autoCurry` copied from the wonderful [wu.js]
+
 [bower]:http://bower.io
+[wu.js]:https://github.com/fitzgen/wu.js
 [JavaScript Allongé]:https://leanpub.com/javascript-allonge/

@@ -3,6 +3,8 @@
  *
  * Inspiration: underscore, lo-dash, allong.es
  * PartialLeft & PartialRight and a lot of ideas and inspiration from Reginald Braithwaites excellent eBook "JavaScript Allongé"
+ *
+ * Autocurry-function, current version almost straight copy from // From http://javascriptweblog.wordpress.com/2010/06/14/dipping-into-wu-js-autocurry/
  */
  (function(context) {
 
@@ -22,32 +24,44 @@
         };
     };
 
-    var toArray = malabi.toArray = function() {
-        return __slice.call(arguments);
+    var toArray = malabi.toArray = function(arr, from) {
+        if (isUndefined(arr)) return [];
+        return __slice.call(arr, from || 0);
     };
 
     // TODO: add support for variable number of parameters
-    malabi.partialLeft = function(fn, larg) {
+    var partialLeft = malabi.curry = malabi.partialLeft = function(fn /*, largs */) {
+        var largs = toArray(arguments, 1);
         return function() {
-            var args = __slice.call(arguments, 0);
-            return fn.apply(this, [larg].concat(args));
+            var args = toArray(arguments, 0);
+            return fn.apply(this, largs.concat(args));
         };
     };
 
     // TODO: add support for variable number of parameters
-    malabi.partialRight = function(fn, rarg) {
+    malabi.partialRight = function(fn /*, rargs */) {
+        var rargs = toArray(arguments, 1);
         return function() {
             var args = __slice.call(arguments, 0);
-            return fn.apply(this, args.concat(rarg));
+            return fn.apply(this, args.concat(rargs));
         };
     };
 
-    // TODO: add support for variable number of parameters
-    malabi.curry = function(fn, larg) {
-        return function() {
-            var args = __slice.call(arguments, 0);
-            return null;
-        };
+    // From http://javascriptweblog.wordpress.com/2010/06/14/dipping-into-wu-js-autocurry/
+    malabi.autoCurry = function autoCurry(fn, numArgs) {
+        numArgs = numArgs || fn.length;
+
+        return function autoCurried() {
+            if (arguments.length < numArgs) {
+                return numArgs - arguments.length > 0 ?
+                    autoCurry(partialLeft.apply(this, [fn].concat(toArray(arguments))),
+                              numArgs - arguments.length) :
+                    partialLeft.apply(this, [fn].concat(toArray(arguments)));
+            }
+            else {
+                return fn.apply(this, arguments);
+            }
+        }
     };
 
     malabi.range = function(end) {

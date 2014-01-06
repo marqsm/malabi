@@ -1,7 +1,16 @@
 var expect = chai.expect;
 
 describe("Malabi-library", function() {
-
+    function sum(a, b) {
+        return a + b;
+    }
+    function sum3(a, b, c) {
+        return a + b + c;
+    }
+    function sumAll() {
+        var args = malabi.toArray(arguments);
+        return malabi.reduce(args, sum, []);
+    }
 
     describe("first", function() {
         it("first([1, 2, 3]) should return 1", function() {
@@ -40,6 +49,12 @@ describe("Malabi-library", function() {
             var myFunc = malabi.partialLeft(malabi.map, [1, 2, 3]);
             expect(myFunc(function(item) { return item * 3; })).to.eql([3, 6, 9]);
         });
+
+        it("Makes a partial function with multiple parameters", function() {
+            var sum = function(a, b, c) { return a + b + c; }
+            var myFunc = malabi.partialLeft(sum, 3);
+            expect(myFunc(5, 7)).to.equal(15);
+        });
     });
 
     describe("partialRight", function() {
@@ -50,24 +65,26 @@ describe("Malabi-library", function() {
     });
 
     describe("curry", function() {
-        it("Curries with two parameters", function() {
-            var _sum = function(a, b) {
-                return a + b;
-            };
-            var sum = function() {
-                var args = Array.prototype.slice.call(arguments);
-                return malabi.reduce(args, _sum, []);
-            }
-            var sumc = malabi.curry(_sum, 4);
-            expect(sumc(3)).to.equal(7);
+        it("Curries with two parameters fn(b)", function() {
+            expect(malabi.curry(sum, 5)(3)).to.equal(8);
         });
 
-        it("Curries with three parameters", function() {
-            var sum = function(a, b) {
-                return a + b;
-            }
-            var sumc = malabi.curry(sum, 4, 5)
-            expect(sumc(3)).to.equal(12);
+        it("Curries with three parameters fn(a, b)(c)", function() {
+            expect(malabi.curry(sum3, 3, 4)(5)).to.equal(12);
+        });
+    });
+
+    describe("autoCurry", function() {
+        var _sumc = malabi.autoCurry(sum),
+            _sumc3 = malabi.autoCurry(sum3),
+            _sumcAll = malabi.autoCurry(sumAll);
+
+        it("Curries with two parameters fn(b)", function() {
+            expect(_sumc(5)(3)).to.equal(8);
+        });
+
+        it("Curries with three parameters fn(a, b)(c)", function() {
+            expect(_sumc3(3, 4)(5)).to.equal(12);
         });
     });
 
@@ -227,8 +244,12 @@ describe("Malabi-library", function() {
      */
 
     describe("toArray", function() {
-        it("toArray(1, 2, 3) should equal [1, 2, 3]", function() {
-            expect(malabi.toArray(1, 2, 3)).to.eql([1, 2, 3]);
+        it("toArray([1, 2, 3]) should equal [1, 2, 3]", function() {
+            expect(malabi.toArray([1, 2, 3])).to.eql([1, 2, 3]);
+        });
+
+        it("toArray() should return empty array", function() {
+            expect(malabi.toArray()).to.eql([]);
         });
     });
 
