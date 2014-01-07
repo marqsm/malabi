@@ -88,6 +88,39 @@ describe("Malabi-library", function() {
         });
     });
 
+    describe("bind", function() {
+        xit("function is bound to different context.", function() {
+            expect(true).to.eql(false);
+        });
+    });
+
+    describe("memoize", function() {
+        var count = 33;
+        it("Fibonacci(" + count + ") should be at least 5 times faster when memoized. ", function() {
+            var fibonacci = function(n) {
+                if (n < 2) return n;
+                return fibonacci(n-2) + fibonacci(n-1);
+            }
+            var fib_memo = malabi.memoize(function(n) {
+                if (n < 2) return n;
+                return fib_memo(n - 2) + fib_memo(n - 1);
+            });
+            var duration = malabi.duration(fibonacci, count),
+                duration_memo = malabi.duration(fib_memo, count);
+            expect(duration > (duration_memo*5)).to.be.true;
+        });
+    });
+
+    describe("Find deep item from object", function() {
+        xit("Finds defined item from foo.bar.baz ", function() {
+            expect(true).to.eql(false);
+        });
+
+        xit("Correctly reports  undefined item from foo.bar.baz ", function() {
+            expect(true).to.eql(false);
+        });
+    });
+
 
     describe("map", function() {
         it("map([1, 2, 3], function(value, index) { return value * 3; }) should return [3, 6, 9]", function() {

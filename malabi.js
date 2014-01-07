@@ -4,7 +4,7 @@
  * Inspiration: underscore, lo-dash, allong.es
  * PartialLeft & PartialRight and a lot of ideas and inspiration from Reginald Braithwaites excellent eBook "JavaScript Allongé"
  *
- * Autocurry-function, current version almost straight copy from // From http://javascriptweblog.wordpress.com/2010/06/14/dipping-into-wu-js-autocurry/
+ * Autocurry-function, current version copied from wu.js - https://github.com/fitzgen/wu.js/blob/master/lib/wu.js
  */
  (function(context) {
 
@@ -61,7 +61,32 @@
             else {
                 return fn.apply(this, arguments);
             }
-        }
+        };
+    };
+
+    malabi.bind = function(fn, context) {
+        // TODO:
+    };
+
+    malabi.duration = function(fn) {
+        var args = toArray(arguments, 1),
+            start = (new Date()).getTime();
+
+        fn.apply(this, args);
+        return ((new Date()).getTime() - start) / 1000;
+    }
+
+    malabi.memoize = function(fn) {
+        var cache = cache || {};
+
+        return function() {
+            var key = toArray(arguments).join();
+
+            if (isUndefined(cache[key])) {
+                cache[key] = fn.apply(this, arguments);
+            }
+            return cache[key];
+        };
     };
 
     malabi.range = function(end) {
@@ -236,13 +261,14 @@
 
         if (a === b) {
             return true;
-        // check array equality
         } else if (isArray(a) && isArray(b)) {
+            // check array items equality
+            // TODO: refactor array items equality check to own function, add recursion for nested arrays check.
             if (a.length == b.length) {
                 len = a.length;
                 for (i = 0; i < len; i++) {
                     same = (a[i] == b[i]);
-                    if (!same) break;
+                    if (!same) return false;
                 }
                 return same;
             }
