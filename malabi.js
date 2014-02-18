@@ -2,20 +2,25 @@
  * Malabi - utility library made for learning purposes.
  *
  * Inspiration: underscore, lo-dash, allong.es
- * PartialLeft & PartialRight and a lot of ideas and inspiration from Reginald Braithwaites excellent eBook "JavaScript Allongé"
+ * - PartialLeft & PartialRight and a lot of ideas and inspiration from Reginald Braithwaites excellent eBook "JavaScript Allongé"
  *
- * Autocurry-function, current version copied from wu.js - https://github.com/fitzgen/wu.js/blob/master/lib/wu.js
+ * - Autocurry - had one from wu.js - https://github.com/fitzgen/wu.js/blob/master/lib/wu.js,
+ * but decided I'll do my own implementation.
+ * - Extra inspiration from underscore
+ * (eg. when can't get a function to work, read underscore source to get ideas. Or after I get it to work, see how they did it.)
  */
+
+ /* TODO: Implement Data.List methods from Haskell (takeWhile done)
+  * http://learnyouahaskell.com/modules
+  */
+
  (function(context) {
 
     oldMalabi = context.malabi;
     context.malabi = {};
 
     // Cached functions
-    var __slice = Array.prototype.slice;
-
-    // Constantish
-    var __breaker = null;
+    var _slice = Array.prototype.slice;
 
     malabi.compose = function(a, b) {
         return function(c) {
@@ -26,10 +31,9 @@
 
     var toArray = malabi.toArray = function(arr, from) {
         if (isUndefined(arr)) return [];
-        return __slice.call(arr, from || 0);
+        return _slice.call(arr, from || 0);
     };
 
-    // TODO: add support for variable number of parameters
     var partialLeft = malabi.curry = malabi.partialLeft = function(fn /*, largs */) {
         var largs = toArray(arguments, 1);
         return function() {
@@ -38,36 +42,25 @@
         };
     };
 
-    // TODO: add support for variable number of parameters
     malabi.partialRight = function(fn /*, rargs */) {
         var rargs = toArray(arguments, 1);
         return function() {
-            var args = __slice.call(arguments, 0);
+            var args = _slice.call(arguments, 0);
             return fn.apply(this, args.concat(rargs));
         };
     };
 
-    // From http://javascriptweblog.wordpress.com/2010/06/14/dipping-into-wu-js-autocurry/
+    // Had one from http://javascriptweblog.wordpress.com/2010/06/14/dipping-into-wu-js-autocurry/
+    // TODO: Implement own.
     malabi.autoCurry = function autoCurry(fn, numArgs) {
-        numArgs = numArgs || fn.length;
-
-        return function autoCurried() {
-            if (arguments.length < numArgs) {
-                return numArgs - arguments.length > 0 ?
-                    autoCurry(partialLeft.apply(this, [fn].concat(toArray(arguments))),
-                              numArgs - arguments.length) :
-                    partialLeft.apply(this, [fn].concat(toArray(arguments)));
-            }
-            else {
-                return fn.apply(this, arguments);
-            }
-        };
     };
 
     malabi.bind = function(fn, context) {
         // TODO:
     };
 
+    // Eg. var fib = function(n) { return (n < 2) ? n : fib(n-2) + fib(n-1); }
+    // malabi.duration(fibonacci, 33)
     malabi.duration = function(fn) {
         var args = toArray(arguments, 1),
             start = (new Date()).getTime();
@@ -99,9 +92,9 @@
     };
 
     // usage foreach(set, function(value, index) { return 'new_value'; })
-    var foreach = malabi.foreach = function(set, func) {
+    var foreach = malabi.foreach = function(set, func, context) {
         for (var i = 0; i < set.length; i++) {
-            func(set[i], i);
+            func.call(context || this, set[i], i);
         }
     };
 
@@ -164,13 +157,12 @@
      */
      // TODO: flattens nested arrays
     var flatten = malabi.flatten = function(arr) {
-        var flat = arr.reduce(function(a, b) {
+        return arr.reduce(function(a, b) {
             if (Array.isArray(b)) {
                 b = flatten(b);
             }
             return a.concat(b)
         }, []);
-        return flat;
     };
 
     malabi.first = function(set) {
@@ -218,7 +210,18 @@
         return [];
      };
 
+    // Inspiration: Haskell Data.List takeWhile
+     malabi.takeWhile = function(set, fnCondition) {
+        var i, len;
 
+        if (isArray(set) || isString(set)) {
+            len = set.length;
+            for (var i=0; i < len; i++) {
+                if (fnCondition(set[i]) == false) return set.slice(0, i);
+            }
+        }
+        return [];
+     }
 
     /**
      * Type checks
@@ -240,16 +243,22 @@
 
     // accepts numbers, not strings etc.
     malabi.isNumber = function(n) {
-        return (typeof n === 'number' ? true : false);
+        return (typeof n === 'number') ? true : false;
     };
 
 
     // Accepts anything that converts to numbers, works: 1, '1', '1.2', '1E3', doesn't: false, NaN, '1f'
     malabi.isNumeric = function(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
+        var x = Number(n);
+        if (isNaN(x) || isUndefined(n) || isNull(n)) return false;
+        return (typeof x === 'number');
     };
 
-    malabi.isString = function(item) {
+    var isNull = malabi.isNull = function(n) {
+        return (n === null);
+    };
+
+    var isString = malabi.isString = function(item) {
         if (typeof item === 'string') {
             return true;
         }

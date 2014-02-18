@@ -14,13 +14,13 @@ describe("Malabi-library", function() {
 
     describe("first", function() {
         it("first([1, 2, 3]) should return 1", function() {
-            expect(malabi.first([1, 2, 3])).to.eql(1);
+            expect(malabi.first([1, 2, 3])).to.equal(1);
         });
     });
 
     describe("last", function() {
         it("last([1, 2, 3]) should return 3", function() {
-            expect(malabi.last([1, 2, 3])).to.eql(3);
+            expect(malabi.last([1, 2, 3])).to.equal(3);
         });
     });
 
@@ -41,17 +41,28 @@ describe("Malabi-library", function() {
         });
     });
 
+    describe("takeWhile", function() {
+        it("takeWhile([6,5,4,3,2,1,2,3,4,5,4,3,2,1], function(n) { return (n > 3); }) should return [6, 5, 4]", function() {
+            expect(malabi.takeWhile([6,5,4,3,2,1,2,3,4,5,4,3,2,1], function(n) { return (n > 3); })).to.eql([6, 5, 4]);
+        });
+
+        it("takeWhile('This is a sentence', function(c) { return (c !== ' '); }) should return 'this'", function() {
+            expect(malabi.takeWhile('This is a sentence', function(c) { return (c !== ' '); })).to.equal('This');
+        });
+
+    });
+
     /**
      * Functionalish-functions
      */
     describe("partialLeft", function() {
         it("Makes a partial function with leftmost parameter", function() {
             var myFunc = malabi.partialLeft(malabi.map, [1, 2, 3]);
-            expect(myFunc(function(item) { return item * 3; })).to.eql([3, 6, 9]);
+                expect(myFunc(function(item) { return item * 3; })).to.eql([3, 6, 9]);
         });
 
         it("Makes a partial function with multiple parameters", function() {
-            var sum = function(a, b, c) { return a + b + c; }
+            var sum = function(a, b, c) { return a + b + c; };
             var myFunc = malabi.partialLeft(sum, 3);
             expect(myFunc(5, 7)).to.equal(15);
         });
@@ -79,11 +90,11 @@ describe("Malabi-library", function() {
             _sumc3 = malabi.autoCurry(sum3),
             _sumcAll = malabi.autoCurry(sumAll);
 
-        it("Curries with two parameters fn(b)", function() {
+        xit("Curries with two parameters fn(b)", function() {
             expect(_sumc(5)(3)).to.equal(8);
         });
 
-        it("Curries with three parameters fn(a, b)(c)", function() {
+        xit("Curries with three parameters fn(a, b)(c)", function() {
             expect(_sumc3(3, 4)(5)).to.equal(12);
         });
     });
@@ -100,14 +111,14 @@ describe("Malabi-library", function() {
             var fibonacci = function(n) {
                 if (n < 2) return n;
                 return fibonacci(n-2) + fibonacci(n-1);
-            }
+            };
+
             var fib_memo = malabi.memoize(function(n) {
                 if (n < 2) return n;
                 return fib_memo(n - 2) + fib_memo(n - 1);
             });
-            var duration = malabi.duration(fibonacci, count),
-                duration_memo = malabi.duration(fib_memo, count);
-            expect(duration > (duration_memo*5)).to.be.true;
+
+            expect(malabi.duration(fibonacci, count) > (malabi.duration(fib_memo, count)*5)).to.equal(true);
         });
     });
 
@@ -168,6 +179,10 @@ describe("Malabi-library", function() {
             malabi.foreach(ar, function(value, index) {
                 expect(value).to.eql(index + 1);
             });
+        });
+
+        xit("Test passing context", function() {
+
         });
     });
 
