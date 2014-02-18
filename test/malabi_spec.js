@@ -75,7 +75,7 @@ describe("Malabi-library", function() {
         });
     });
 
-    describe("curry", function() {
+    describe("curry, alias for partialLeft", function() {
         it("Curries with two parameters fn(b)", function() {
             expect(malabi.curry(sum, 5)(3)).to.equal(8);
         });
@@ -100,8 +100,14 @@ describe("Malabi-library", function() {
     });
 
     describe("bind", function() {
-        xit("function is bound to different context.", function() {
-            expect(true).to.eql(false);
+        it("function is bound to different context.", function() {
+            var x = 10,
+                a = {"x": 101};
+
+            var getX = function() {
+                return this.x;
+            };
+            expect(malabi.bind(a, getX)()).to.equal(101);
         });
     });
 

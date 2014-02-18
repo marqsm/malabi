@@ -2,7 +2,7 @@
  * Malabi - utility library made for learning purposes.
  *
  * Inspiration: underscore, lo-dash, allong.es
- * - PartialLeft & PartialRight and a lot of ideas and inspiration from Reginald Braithwaites excellent eBook "JavaScript Allongé"
+ * - Essentials for PartialLeft & PartialRight and a lot of ideas and inspiration from Reginald Braithwaites excellent eBook "JavaScript Allongé"
  *
  * - Autocurry - had one from wu.js - https://github.com/fitzgen/wu.js/blob/master/lib/wu.js,
  * but decided I'll do my own implementation.
@@ -34,19 +34,27 @@
         return _slice.call(arr, from || 0);
     };
 
-    var partialLeft = malabi.curry = malabi.partialLeft = function(fn /*, largs */) {
-        var largs = toArray(arguments, 1);
+    malabi.bind = function(context, fn) {
         return function() {
-            var args = toArray(arguments, 0);
-            return fn.apply(this, largs.concat(args));
+            return fn.apply(context, arguments);
+        }
+    };
+
+    // Heavily influenced by Javascript Allongé
+    malabi.partialLeft = malabi.curry = function(fn /*, leftArgs */) {
+        var leftArgs = toArray(arguments, 1);
+        return function(/* rightArgs */) {
+            var rightArgs = toArray(arguments);
+            return fn.apply(this, leftArgs.concat(rightArgs));
         };
     };
 
-    malabi.partialRight = function(fn /*, rargs */) {
-        var rargs = toArray(arguments, 1);
-        return function() {
-            var args = _slice.call(arguments, 0);
-            return fn.apply(this, args.concat(rargs));
+    // Heavily influenced by Javascript Allongé
+    malabi.partialRight = function(fn /*, rightArgs */) {
+        var rightArgs = toArray(arguments, 1);
+        return function(/* leftArgs */) {
+            var leftArgs = toArray(arguments);
+            return fn.apply(this, leftArgs.concat(rightArgs));
         };
     };
 
@@ -55,8 +63,8 @@
     malabi.autoCurry = function autoCurry(fn, numArgs) {
     };
 
-    malabi.bind = function(fn, context) {
-        // TODO:
+    var identity = malabi.identity = function(x) {
+        return x;
     };
 
     // Eg. var fib = function(n) { return (n < 2) ? n : fib(n-2) + fib(n-1); }
@@ -155,7 +163,7 @@
     /**
      * Array functions
      */
-     // TODO: flattens nested arrays
+     // Flatten all nested arrays
     var flatten = malabi.flatten = function(arr) {
         return arr.reduce(function(a, b) {
             if (Array.isArray(b)) {
