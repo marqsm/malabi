@@ -227,10 +227,7 @@ describe("Malabi-library", function() {
     /**
      * Array functions
      */
-     // TODO: Add tests for First
-     // TODO: add tests for last
-     // TODO: add tests for rest
-     // TODO: add tests for flatten
+
     describe("range", function() {
         it("range(5) should return [1, 2, 3, 4, 5]", function() {
             expect(malabi.range(5)).to.eql([1, 2, 3, 4, 5]);
