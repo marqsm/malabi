@@ -52,6 +52,41 @@ describe("Malabi-library", function() {
 
     });
 
+    describe("dropWhile", function() {
+        it("Should work with integers", function() {
+            expect(malabi.dropWhile([1,2,2,2,3,4,5,4,3,2,1], function(n) { return (n < 3); })).to.eql([3,4,5,4,3,2,1]);
+        });
+    });
+
+    describe("group", function() {
+        it("Should work with arrays of integers", function() {
+            expect(malabi.group([1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7])).to.eql([[1,1,1,1],[2,2,2,2],[3,3],[2,2,2],[5],[6],[7]]);
+        });
+    });
+
+    describe("partition", function() {
+        it("Should work with arrays of integers", function() {
+            expect(malabi.takeWhile([1,3,5,6,3,2,1,0,3,7], function(n) { return (n > 3); })).to.eql([[5,6,7],[1,3,3,2,1,0,3]]);
+        });
+    });
+
+    describe("intersperse", function() {
+        it("Should work with arrays of integers", function() {
+            expect(malabi.intersperse(0, [1,2,3,4,5,6])).to.eql([1,0,2,0,3,0,4,0,5,0,6]);
+        });
+
+        it("Should work with a string", function() {
+            expect(malabi.intersperse(".", "MONKEY")).to.eql("M.O.N.K.E.Y");
+        });
+    });
+
+    describe("intercalate", function() {
+        it("Should work with arrays of integers", function() {
+            expect(malabi.intercalate([0,0,0], [[1,2,3],[4,5,6],[7,8,9]])).to.eql([1,2,3,0,0,0,4,5,6,0,0,0,7,8,9]);
+        });
+    });
+
+
     /**
      * Functionalish-functions
      */

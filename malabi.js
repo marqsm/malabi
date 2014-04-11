@@ -220,7 +220,7 @@
 
     // Inspiration: Haskell Data.List takeWhile (description from "Learn you a Haskell for great good")
     // takeWhile is a really useful little function. It takes elements from a list while the predicate holds and then when an element is encountered that doesn't satisfy the predicate, it's cut off. It turns out this is very useful.
-    // takeWhile (>3) [6,5,4,3,2,1,2,3,4,5,4,3,2,1]  === [6,5,4]
+    // takeWhile (>3) [6,5,4,3,2,1,2,3,4,5,4,3,2,1]  returns [6,5,4]
     malabi.takeWhile = function(set, fnCondition) {
         var i, len;
 
@@ -235,29 +235,38 @@
 
     // (description from "Learn you a Haskell for great good")
     // dropWhile is similar, only it drops all the elements while the predicate is true. Once predicate equates to False, it returns the rest of the list. An extremely useful and lovely function!
-    // dropWhile (<3) [1,2,2,2,3,4,5,4,3,2,1]  === [3,4,5,4,3,2,1]
+    // dropWhile (<3) [1,2,2,2,3,4,5,4,3,2,1]  returns [3,4,5,4,3,2,1]
     malabi.dropWhile = function() {
 
     }
 
     // (description from "Learn you a Haskell for great good")
     // "takes an element and a list and then puts that element in between each pair of elements in the list. Here's a demonstration:"
-    // intersperse("MONKEY") === 'M.O.N.K.E.Y'
+    // intersperse("MONKEY") returns 'M.O.N.K.E.Y'
     // TODO: Handle both arrays and strings.
     malabi.intersperse = function(el, list) {
 
     }
 
+    // (description from "Learn you a Haskell for great good")
     // intercalate takes a list of lists and a list. It then inserts that list in between all those lists and then flattens the result.
-    // eg. intercalate " " ["hey","there","guys"]  === "hey there guys"
-    // intercalate [0,0,0] [[1,2,3],[4,5,6],[7,8,9]] === [1,2,3,0,0,0,4,5,6,0,0,0,7,8,9]
+    // eg. intercalate " " ["hey","there","guys"]  returns "hey there guys"
+    // intercalate [0,0,0] [[1,2,3],[4,5,6],[7,8,9]] returns [1,2,3,0,0,0,4,5,6,0,0,0,7,8,9]
     malabi.intercalate = function(list, lists) {
 
     }
 
+    // (description from "Learn you a Haskell for great good")
     // group takes a list and groups adjacent elements into sublists if they are equal.
-    // group [1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7]  === [[1,1,1,1],[2,2,2,2],[3,3],[2,2,2],[5],[6],[7]]
+    // group [1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7]  returns [[1,1,1,1],[2,2,2,2],[3,3],[2,2,2],[5],[6],[7]]
     malabi.group = function(list) {
+
+    }
+
+    // (description from "Learn you a Haskell for great good")
+    // partition takes a list and a predicate and returns a pair of lists. The first list in the result contains all the elements that satisfy the predicate, the second contains all the ones that don't.
+    // partition (>3) [1,3,5,6,3,2,1,0,3,7]  returns ([5,6,7],[1,3,3,2,1,0,3])
+    malabi.partition = function(list, fnCondition) {
 
     }
 
